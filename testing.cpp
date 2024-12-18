@@ -19,7 +19,7 @@ void newVault(sudo &master, string &vaultName){
     cout << "Enter password: ";
     cin >> master.Pass;
     ofstream file("users.txt", ios::app);
-    file << master.User << " " << master.Pass << endl;
+    file << "Username: " << master.User << endl << "Password: " << master.Pass << endl;
     vaultName = master.User + ".txt";
     ofstream vault(vaultName);
     vault.close();
@@ -74,59 +74,48 @@ void outputPassword(string &vaultName){
         cout << line << endl;
     }
 }
-string loginVault(){
+string loginVault()
+{
     string username, password, line;
-    bool repeat ;
+    bool repeat;
     bool valUser, valPass;
-    //valUser = false;
-    do{
+    // valUser = false;
+    do
+    {
         cout << "masukkan username: ";
         cin >> username;
         cout << "masukkkan password: ";
         cin >> password;
-        int index = 0;
         ifstream users("users.txt");
         while (getline(users, line))
         {
             if (line.find(username) != string::npos)
             {
-                //valUser = true;
+                // valUser = true;
                 cout << "user " << line << endl;
                 getline(users, line);
                 cout << "password " << line << endl;
-                if (line == password)
+                if (line.find(password) != string::npos)
                 {
                     valPass = true;
-                    repeat = false;
+                    return username + ".txt";
                 }
                 else
                 {
                     valPass = false;
+                    cout << "Password salah\n" ;
                     repeat = true;
-                    
+                    break;
                 }
-                break;
             }
-            else if (line.find(username) == string::npos)
+            else // else if (line.find(username) == string::npos)
             {
-                cout << "Username tidak ditemukan"<<endl;
+                cout << "Username tidak ditemukan" << endl;
                 repeat = true;
-                break;
             }
-            
-
-            
         }
-
     } while (repeat == true);
-    if (valPass == true)
-    {
-        return username + ".txt";
-    }
-    else{
-        cout << "Password salah";
-        mainMenu();
-}
+    return " "; // return empty string
 }
 void mainMenu(){
     int choice;
@@ -135,6 +124,7 @@ void mainMenu(){
     cout << "1. New Vault" << endl;
     cout << "2. Login" << endl;
     cout << "3. Quit" << endl;
+    cout << "Enter choice: ";
     cin >> choice;
     switch (choice)
     {
@@ -157,6 +147,7 @@ void loginMenu(string vaultName){
     cout << "1. Find Password" << endl;
     cout << "2. New Password" << endl;
     cout << "3. Quit" << endl;
+    cout << "Enter choice: ";
     cin >> choice;
     switch (choice)
     {
@@ -174,5 +165,6 @@ void loginMenu(string vaultName){
 int main()
 {
     mainMenu();
+    
     return 0;
 }
