@@ -50,33 +50,33 @@ void inputPassword(string &vaultName){
     
 }
 void findLogin(string &vaultName){
-    string website, username, password, findWebsite, line;
+    string website, username, password, findWebsite, masterUser;
     cout << "Enter website: ";
     cin >> findWebsite;
     ofstream temp("temp.txt");
     ifstream vault(vaultName);
-    while(getline(vault, line)){
-        if (line.find(findWebsite) != string::npos)
+    while(getline(vault, masterUser)){
+        if (masterUser.find(findWebsite) != string::npos)
         {
          for (int i = 0; i < 2; i++)
             {
-            getline(vault, line);  
-            temp << line << endl;
-            cout << line << endl;
+            getline(vault, masterUser);  
+            temp << masterUser << endl;
+            cout << masterUser << endl;
             }
         }   
     }
 }
 void outputPassword(string &vaultName){
-    string line;
+    string masterUser;
     ifstream vault(vaultName);
-    while(getline(vault, line)){
-        cout << line << endl;
+    while(getline(vault, masterUser)){
+        cout << masterUser << endl;
     }
 }
 string loginVault()
 {
-    string username, password, line;
+    string username, password, masterUser, masterPass;
     bool repeat;
     bool valUser, valPass;
     // valUser = false;
@@ -87,15 +87,15 @@ string loginVault()
         cout << "masukkkan password: ";
         cin >> password;
         ifstream users("users.txt");
-        while (getline(users, line))
+        while (getline(users, masterUser))
         {
-            if (line.find(username) != string::npos)
+            if (masterUser.find(username) != string::npos)
             {
                 // valUser = true;
-                cout << "user " << line << endl;
-                getline(users, line);
-                cout << "password " << line << endl;
-                if (line.find(password) != string::npos)
+                cout << "user " << masterUser << endl;
+                getline(users, masterPass);
+                cout << "password " << masterPass << endl;
+                if (masterPass.find(password) != string::npos)
                 {
                     valPass = true;
                     return username + ".txt";
@@ -103,12 +103,12 @@ string loginVault()
                 else
                 {
                     valPass = false;
-                    cout << "Password salah\n" ;
+                    cout << "\n\nPASSWORD SALAH\n" ;
                     repeat = true;
                     break;
                 }
             }
-            else // else if (line.find(username) == string::npos)
+            else // else if (masterUser.find(username) == string::npos)
             {
                 cout << "Username tidak ditemukan" << endl;
                 repeat = true;
