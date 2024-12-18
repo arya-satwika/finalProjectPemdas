@@ -6,7 +6,7 @@ using namespace std;
 
 struct login
 {
-    string usernaame;
+    string username;
     string website;
     string password;
 };
