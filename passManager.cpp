@@ -10,9 +10,15 @@ struct login
     string website;
     string password;
 };
+struct sudo
+{
+    string masterUser;
+    string masterPass;
+};
 
 
-void newVault(string &vaultName){
+
+void newVault(string &vaultName, sudo* master){
     string username, password;
     //harsya
 
@@ -41,8 +47,21 @@ void findPassword(string &vaultName){
 
 void newPassword(){}
 
+void outputSudo(){
+    //cout << "Master Username: " << master.masterUser << endl;
+    //cout << "Master Password: " << master.masterPass << endl;
+}
+
 int main()
 {
+    sudo master;
+    cout << "Welcome to PassManager!" << endl;
+    cout << "Enter Master Username: ";
+    cin >> master.masterUser;
+    cout << "Enter Master Password: ";
+    cin >> master.masterPass;
+    
+    
     string vaultName;
     return 0;
 }

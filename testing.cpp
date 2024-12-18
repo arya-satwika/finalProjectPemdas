@@ -1,50 +1,55 @@
-
 #include <iostream>
 #include <fstream>
 
-
 using namespace std;
 
-struct login
-{
-    string username;
-    string website;
-    string password;
+struct sudo{
+    string User;
+    string Pass;
 };
+void mainMenu();
+void loginMenu(string vaultName);
+void inputPassword(string &vaultName);
+void findLogin(string &vaultName);
+void newVault(sudo &master, string &vaultName){
 
-struct masterCred{
-    string masterUser;
-    string masterPass;
-};
-void newVault(string &vaultName){
-
-    string username, password;
+    
     cout << "Enter username: ";
-    masterCred user1;
-    cin >> user1.masterUser;
+    cin >> master.User;
     cout << "Enter password: ";
-    cin >> password;
-
+    cin >> master.Pass;
     ofstream file("users.txt", ios::app);
-    file << username << " " << password << endl;
-    ofstream vault(username + ".txt");
+    file << master.User << " " << master.Pass << endl;
+    vaultName = master.User + ".txt";
+    ofstream vault(vaultName);
     vault.close();
-    vaultName = username + ".txt"; 
+    inputPassword(vaultName);
 
 }
 void inputPassword(string &vaultName){
-    string username, password, website;
-    cout << "Enter website: ";
-    cin >> website;
-    cout << "Enter username: ";
-    cin >> username;
-    cout << "Enter password: ";
-    cin >> password;
-    ofstream vault(vaultName, ios::app);
-    vault << website << endl << username << endl << password << endl;
-    vault.close();
+    char lanjut;
+    do
+    {
+        string username, password, website;
+        cout << "Enter website: ";
+        cin >> website;
+        cout << "Enter username: ";
+        cin >> username;
+        cout << "Enter password: ";
+        cin >> password;
+        ofstream vault(vaultName, ios::app);
+        vault << website << endl << username << endl << password << endl;
+        vault.close();
+        cout << "Do you want to add another password? (y/n): ";
+        cin >> lanjut;
+    } while (tolower(lanjut) == 'y');
+    if (tolower(lanjut) == 'n')
+    {
+        mainMenu();
+    }
+    
 }
-void findPassword(string &vaultName){
+void findLogin(string &vaultName){
     string website, username, password, findWebsite, line;
     cout << "Enter website: ";
     cin >> findWebsite;
@@ -53,64 +58,121 @@ void findPassword(string &vaultName){
     while(getline(vault, line)){
         if (line.find(findWebsite) != string::npos)
         {
-         for (int i = 0; i < 2; i+=2)
+         for (int i = 0; i < 2; i++)
             {
             getline(vault, line);  
             temp << line << endl;
+            cout << line << endl;
             }
         }   
     }
 }
-
-string loginVault(){
-    string username, password, line;
-    cout << "masukkan username: ";
-    cin >> username;
-    cout << "masukkkan password: ";
-    cin >> password;
-    bool valUser;
-    ifstream users("users.txt");
-    while(getline(users, line)){
-        if (line.find(username) != string::npos)
-        {
-         for (int i = 0; i < 2; i++)
-         {
-            getline(users, line);  
-            if (i == 0)
-            {
-                if (line == username)
-                {
-                    valUser = 1;
-                }
-                else{
-                valUser=0;
-
-                }
-            }
-            else if (i == 1)
-            {
-                if (line == password)
-                {
-                    bool valUser = 1;
-                }
-                else{
-                valUser=0;}
-            }
-            
-            
-        }
-            if (!valUser)
-            {
-                cout << "username dan password tidak sesuai";
-                return "tidak ada user";
-            }
-        return username + ".txt";
-        }
+void outputPassword(string &vaultName){
+    string line;
+    ifstream vault(vaultName);
+    while(getline(vault, line)){
+        cout << line << endl;
     }
 }
+string loginVault(){
+    string username, password, line;
+    bool repeat ;
+    bool valUser, valPass;
+    //valUser = false;
+    do{
+        cout << "masukkan username: ";
+        cin >> username;
+        cout << "masukkkan password: ";
+        cin >> password;
+        int index = 0;
+        ifstream users("users.txt");
+        while (getline(users, line))
+        {
+            if (line.find(username) != string::npos)
+            {
+                //valUser = true;
+                cout << "user " << line << endl;
+                getline(users, line);
+                cout << "password " << line << endl;
+                if (line == password)
+                {
+                    valPass = true;
+                    repeat = false;
+                }
+                else
+                {
+                    valPass = false;
+                    repeat = true;
+                    
+                }
+                break;
+            }
+            else if (line.find(username) == string::npos)
+            {
+                cout << "Username tidak ditemukan"<<endl;
+                repeat = true;
+                break;
+            }
+            
 
+            
+        }
+
+    } while (repeat == true);
+    if (valPass == true)
+    {
+        return username + ".txt";
+    }
+    else{
+        cout << "Password salah";
+        mainMenu();
+}
+}
+void mainMenu(){
+    int choice;
+    sudo master;
+    string vaultName;
+    cout << "1. New Vault" << endl;
+    cout << "2. Login" << endl;
+    cout << "3. Quit" << endl;
+    cin >> choice;
+    switch (choice)
+    {
+    case 1:
+        newVault(master, vaultName);
+        break;
+    case 2:
+        loginMenu(loginVault());
+        break;
+    case 3:
+        cout << "Goodbye!";
+        break;
+    default:
+        cout << "Invalid choice";
+        break;
+    }
+}
+void loginMenu(string vaultName){
+    int choice;
+    cout << "1. Find Password" << endl;
+    cout << "2. New Password" << endl;
+    cout << "3. Quit" << endl;
+    cin >> choice;
+    switch (choice)
+    {
+    case 1:
+        findLogin(vaultName);
+        break;
+    case 2:
+        inputPassword(vaultName);
+        break;
+    case 3:
+        cout << "Goodbye!";
+        break;
+    }
+}
 int main()
 {
-    string vaultName;
+    mainMenu();
     return 0;
 }
