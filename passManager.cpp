@@ -39,7 +39,7 @@ void findPassword(string &vaultName){
     }
 }
 
-
+void newPassword(){}
 
 int main()
 {
