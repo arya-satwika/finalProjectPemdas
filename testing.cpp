@@ -7,10 +7,13 @@ struct sudo{
     string User;
     string Pass;
 };
+
 void mainMenu();
 void loginMenu(string vaultName);
 void inputPassword(string &vaultName);
 void findLogin(string &vaultName);
+void loginMenu(string vaultName);
+
 void newVault(sudo &master, string &vaultName){
 
     
@@ -138,6 +141,7 @@ void mainMenu(){
         cout << "Goodbye!";
         break;
     default:
+        mainMenu();
         cout << "Invalid choice";
         break;
     }
@@ -160,11 +164,14 @@ void loginMenu(string vaultName){
     case 3:
         cout << "Goodbye!";
         break;
+    default:
+        cout << "Invalid choice";
+        loginMenu(vaultName);
+        break;
     }
 }
 int main()
 {
     mainMenu();
-    
     return 0;
 }
