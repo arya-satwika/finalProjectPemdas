@@ -7,6 +7,12 @@ struct sudo{
     string User;
     string Pass;
 };
+struct storedLogin
+{
+    string username;
+    string password;
+};
+
 
 void mainMenu();
 void loginMenu(string vaultName);
@@ -54,21 +60,54 @@ void inputPassword(string &vaultName){
 }
 void findLogin(string &vaultName){
     string website, username, password, findWebsite, masterUser;
+    string temp;
+    string storedUser[] = {" "};
+    string storedPass[] = {" "};
+    int index = 0;
     cout << "Enter website: ";
     cin >> findWebsite;
-    ofstream temp("temp.txt");
+    //ofstream temp("temp.txt");
     ifstream vault(vaultName);
-    while(getline(vault, masterUser)){
+    while (getline(vault, masterUser))
+    {
+        // found "website" in line
         if (masterUser.find(findWebsite) != string::npos)
         {
-         for (int i = 0; i < 2; i++)
+            while (getline(vault, temp))
             {
-            getline(vault, masterUser);  
-            temp << masterUser << endl;
-            cout << masterUser << endl;
+                if (temp.find("Website:") != string::npos)
+                {
+                    break;
+                }
+                else if (temp.find("Username:") != string::npos)
+                {
+                    // removes "Username: " from the string
+                    temp.erase(0, 10);
+                    storedUser[index] = temp;
+                    //cout << "Username "<< index << ": " << storedUser[index] << endl;
+                    //index++;
+                }
+                else if (temp.find("Password:") != string::npos)
+                {
+                    // removes "Password: " from the string
+                    temp.erase(0, 10);
+                    storedPass[index] = temp;
+                    //cout << "Password "<< index << ": " << storedPass[index] << endl;
+                    index++;
+                }
+                
+                
             }
-        }   
+            cout << index << endl;
+            break;
+            
+        }
     }
+            for (int i = 0; i < index; i++)
+            {
+                cout << "Username "<< i+1 << " :" << storedUser[i] << endl;
+                cout << "Password "<< i+1 << " :" << storedPass[i] << endl; 
+            }
 }
 void outputPassword(string &vaultName){
     string masterUser;

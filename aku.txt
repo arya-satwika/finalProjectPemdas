@@ -1,3 +1,9 @@
-twitter.com
-kok
-dik
+Website: twitter.com
+Username: kok
+Password: dik
+Username: aba
+Password: cuk
+
+Website: instagram.com
+fafa
+fufu
