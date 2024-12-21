@@ -68,11 +68,30 @@ void findLogin(string &vaultName){
     cout << "Enter website: ";
     cin >> findWebsite;
     //ofstream temp("temp.txt");
-    ifstream vault(vaultName);
+        ifstream vault(vaultName);
+    while (getline(vault, temp)) {
+        cout << "Outer loop line: " << temp << endl;
+    
+        // Inner getline
+        if (temp.find(findWebsite) != string::npos) {
+            while (getline(vault, temp)) {
+                cout << "Inner loop line: " << temp << endl;
+                if (temp.find("Username: ") != string::npos) {
+                    // Process username
+                } else if (temp.find("Password: ") != string::npos) {
+                    // Process password
+                } else if (temp.find("Website:") != string::npos) {
+                    break; // Exit inner loop when a new website is found
+                }
+            }
+        }
+    }
+    /*ifstream vault(vaultName);
     while (getline(vault, temp))
     {
         // found "website" in line
-        if (temp.find(findWebsite) != string::npos)
+        cout << "scan" << temp << endl;
+        /*if (temp.find(findWebsite) != string::npos)
         {
             n++;
             for (int k = 0; k < 2; k++)
@@ -90,10 +109,8 @@ void findLogin(string &vaultName){
                     //cout << storedPass[warrIndex] << endl;
                 }
             }
-            cout << "find website" << temp << endl;
         }
-        cout << "scan" << temp << endl;
-    }
+    }*/
     
 }
 void outputPassword(string &vaultName){
