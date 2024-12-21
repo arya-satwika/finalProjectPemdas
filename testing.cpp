@@ -76,13 +76,13 @@ void findLogin(string &vaultName){
             for (int i = 0; i < 2; i++)
             {
             getline(vault, temp);
-               // cout << "Inner loop line: " << temp << endl;
-                if (i==0) {
+                if (i==0)
+                {
                     temp.erase(0,10);
                     storedUser[index]=temp;
-
-                    
-                } else if (i==1) {
+                } 
+                else if (i==1)
+                {
                     temp.erase(0,10);
                     storedPass[index]=temp;
                     index++;
