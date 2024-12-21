@@ -59,6 +59,20 @@ void inputPassword(string &vaultName){
     }
     
 }
+int loginInstance(string &vaultname , string findWebsite){ 
+    string temp;
+    int count=0;
+    ifstream vault(vaultname);
+    while (getline(vault, temp))
+    {
+        if (temp.find("Website: "+findWebsite) != string::npos)
+        {
+            count++;
+        }
+        
+    }
+    return count;
+}   
 void findLogin(string &vaultName){
     string website, username, password, findWebsite, masterUser;
     string temp;
@@ -69,7 +83,6 @@ void findLogin(string &vaultName){
     int size = loginInstance(vaultName, findWebsite);
     string storedUser[size];
     string storedPass[size];
-    //ofstream temp("temp.txt");
     ifstream vault(vaultName);
     while (getline(vault, temp)) {
         if (temp == "Website: "+findWebsite) {
@@ -88,33 +101,21 @@ void findLogin(string &vaultName){
                     index++;
                 } 
             }
-            
         }
-
     }
     vault.close();
+    int choice;
+    cout <<"pilih akun yang mana?" << endl;
     for (int j = 0; j < size; j++)
     {
-    cout << "Username: " << storedUser[j] << endl;
-    cout << "Password: " << storedPass[j] << endl;
+    cout << j+1 << ". Username: " << storedUser[j] << endl;
     }
-    
+    cout << "masukkan angka: ";
+    cin >> choice;
+    cout << "Username: " << storedUser[choice-1] << endl;
+    cout << "Password: " << storedPass[choice-1] << endl;
 }
 
-int loginInstance(string &vaultname , string findWebsite){ 
-    string temp;
-    int count=0;
-    ifstream vault(vaultname);
-    while (getline(vault, temp))
-    {
-        if (temp.find("Website: "+findWebsite) != string::npos)
-        {
-            count++;
-        }
-        
-    }
-    return count;
-}   
     /*ifstream vault(vaultName);
     while (getline(vault, temp))
     {
