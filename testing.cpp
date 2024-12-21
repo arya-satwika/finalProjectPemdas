@@ -19,6 +19,7 @@ void loginMenu(string vaultName);
 void inputPassword(string &vaultName);
 void findLogin(string &vaultName);
 void loginMenu(string vaultName);
+int loginInstance(string &vaultname , string findWebsite);
 
 void newVault(sudo &master, string &vaultName){
 
@@ -61,31 +62,59 @@ void inputPassword(string &vaultName){
 void findLogin(string &vaultName){
     string website, username, password, findWebsite, masterUser;
     string temp;
-    int n;
-    int arrIndex = 1;
-    string storedUser[arrIndex];
-    string storedPass[arrIndex];
+    int index=0;
+    int count;
     cout << "Enter website: ";
     cin >> findWebsite;
+    int size = loginInstance(vaultName, findWebsite);
+    string storedUser[size];
+    string storedPass[size];
     //ofstream temp("temp.txt");
-        ifstream vault(vaultName);
+    ifstream vault(vaultName);
     while (getline(vault, temp)) {
-        cout << "Outer loop line: " << temp << endl;
-    
-        // Inner getline
-        if (temp.find(findWebsite) != string::npos) {
-            while (getline(vault, temp)) {
-                cout << "Inner loop line: " << temp << endl;
-                if (temp.find("Username: ") != string::npos) {
-                    // Process username
-                } else if (temp.find("Password: ") != string::npos) {
-                    // Process password
-                } else if (temp.find("Website:") != string::npos) {
-                    break; // Exit inner loop when a new website is found
-                }
+        if (temp == "Website: "+findWebsite) {
+            for (int i = 0; i < 2; i++)
+            {
+            getline(vault, temp);
+               // cout << "Inner loop line: " << temp << endl;
+                if (i==0) {
+                    temp.erase(0,10);
+                    storedUser[index]=temp;
+
+                    
+                } else if (i==1) {
+                    temp.erase(0,10);
+                    storedPass[index]=temp;
+                    index++;
+                } 
             }
+            
         }
+
     }
+    vault.close();
+    for (int j = 0; j < size; j++)
+    {
+    cout << "Username: " << storedUser[j] << endl;
+    cout << "Password: " << storedPass[j] << endl;
+    }
+    
+}
+
+int loginInstance(string &vaultname , string findWebsite){ 
+    string temp;
+    int count=0;
+    ifstream vault(vaultname);
+    while (getline(vault, temp))
+    {
+        if (temp.find("Website: "+findWebsite) != string::npos)
+        {
+            count++;
+        }
+        
+    }
+    return count;
+}   
     /*ifstream vault(vaultName);
     while (getline(vault, temp))
     {
@@ -112,7 +141,7 @@ void findLogin(string &vaultName){
         }
     }*/
     
-}
+
 void outputPassword(string &vaultName){
     string masterUser;
     ifstream vault(vaultName);
@@ -215,6 +244,7 @@ void loginMenu(string vaultName){
 }
 int main()
 {
-    mainMenu();
+    string vault = "aku.txt";
+    findLogin(vault);
     return 0;
 }
