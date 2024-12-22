@@ -1,9 +1,7 @@
 Website: twitter.com
-Username: kok
-Password: dik
-Website: twitter.com
 Username: aba
 Password: cuk
-Website: instagram.com
-fafa
-fufu
+Website: twitter.com
+Username: user
+Password: ditemukan
+

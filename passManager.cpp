@@ -4,12 +4,6 @@
 
 using namespace std;
 
-struct login
-{
-    string username;
-    string website;
-    string password;
-};
 struct sudo
 {
     string masterUser;
@@ -46,11 +40,6 @@ void findPassword(string &vaultName){
 }
 
 void newPassword(){}
-
-void outputSudo(){
-    //cout << "Master Username: " << master.masterUser << endl;
-    //cout << "Master Password: " << master.masterPass << endl;
-}
 
 int main()
 {

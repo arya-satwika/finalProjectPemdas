@@ -98,12 +98,22 @@ int loginInstance(string &vaultname , string findWebsite){
         
     }
     return count;
-}   
+}
+int outputLogin(string* storedUser, string* storedPass, int size){
+    int choice;
+    cout <<"pilih akun yang mana?" << endl;
+    for (int j = 0; j < size; j++)
+    {
+    cout << j+1 << ". Username: " << storedUser[j] << endl;
+    }
+    cout << "masukkan angka: ";
+    cin >> choice;
+    return choice;
+}
 void findLogin(string &vaultName){
-    string website, username, password, findWebsite, masterUser;
+    string website, findWebsite ;
     string temp;
     int index=0;
-    int count;
     int index2=0;
     cout << "Enter website: ";
     cin >> findWebsite;
@@ -136,16 +146,69 @@ void findLogin(string &vaultName){
         }
     }
     vault.close();
-    int choice;
-    cout <<"pilih akun yang mana?" << endl;
-    for (int j = 0; j < size; j++)
-    {
-    cout << j+1 << ". Username: " << storedUser[j] << endl;
-    }
-    cout << "masukkan angka: ";
-    cin >> choice;
+    int choice = outputLogin(storedUser, storedPass, size);
     cout << "Username: " << storedUser[choice-1] << endl;
     cout << "Password: " << storedPass[choice-1] << endl;
+}
+void masukkinPass(string findWebsite, string* storedUser, string &vaultName, int choice){
+    ifstream vaultRead(vaultName);
+    string temp;
+    string newPassword;
+    while (getline(vaultRead, temp)) {
+        if (temp == "Website: "+findWebsite) {
+            getline(vaultRead, temp);
+            if (temp == "Username: "+storedUser[choice-1])
+            {
+                cout << "Enter new password: ";
+                cin >> newPassword;
+                getline(vaultRead, temp);
+                ofstream vaultWrite(vaultName);
+                vaultWrite << "Password: " << newPassword << endl;
+                vaultWrite.close();
+            }
+          
+          
+        }
+    }
+    vaultRead.close();
+}
+void updatePass(string &vaultName){
+    string website, findWebsite ;
+    string temp;
+    int index=0;
+    int index2=0;
+    cout << "Enter website: ";
+    cin >> findWebsite;
+    for (char ch : findWebsite)
+    {
+        findWebsite[index2] = tolower(ch);
+        index2++;
+    }
+    int size = loginInstance(vaultName, findWebsite);
+    string storedUser[size];
+    string storedPass[size];
+    ifstream vaultRead(vaultName);
+    while (getline(vaultRead, temp)) {
+        if (temp == "Website: "+findWebsite) {
+            for (int i = 0; i < 2; i++)
+            {
+            getline(vaultRead, temp);
+                if (i==0)
+                {
+                    temp.erase(0,10);
+                    storedUser[index]=temp;
+                } 
+                else if (i==1)
+                {
+                    temp.erase(0,10);
+                    storedPass[index]=temp;
+                    index++;
+                } 
+            }
+        }
+    }
+    int choice = outputLogin(storedUser, storedPass, size);
+    masukkinPass(findWebsite, storedUser, vaultName, choice);
 }
 string loginVault()
 {
@@ -217,6 +280,7 @@ void loginMenu(string vaultName){
     cout << "1. Find Password" << endl;
     cout << "2. New Password" << endl;
     cout << "3. Quit" << endl;
+    cout << "4. Update Password" << endl;
     cout << "Masukkan Pilihan: ";
     cin >> choice;
     switch (choice)
@@ -229,6 +293,9 @@ void loginMenu(string vaultName){
         break;
     case 3:
         cout << "Goodbye!";
+        break;
+    case 4:
+        updatePass(vaultName);
         break;
     default:
         cout << "Invalid choice";
