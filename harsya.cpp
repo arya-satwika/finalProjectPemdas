@@ -50,4 +50,4 @@ void createMasterCredentials(MasterCredentials &master) {
 
     cout << "Enter Master Password: ";
     cin >> master.masterPassword;
-ini kode sintax flowchart 1 dari bagian harsya
+}

@@ -150,7 +150,7 @@ void findLogin(string &vaultName){
     cout << "Username: " << storedUser[choice-1] << endl;
     cout << "Password: " << storedPass[choice-1] << endl;
 }
-void masukkinPass(string findWebsite, string* storedUser, string &vaultName, int choice){
+void masukkinPass(string findWebsite, string* storedUser, const string &vaultName, int choice){
     ifstream vaultRead(vaultName);
     string temp;
     string newPassword;

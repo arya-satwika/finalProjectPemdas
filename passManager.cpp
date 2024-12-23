@@ -13,9 +13,14 @@ struct sudo
 
 
 void newVault(string &vaultName, sudo* master){
-    string username, password;
-    //harsya
 
+    string username, password;
+    cout << "Enter Master Username: ";
+    cin >> master.masterUser;
+
+    cout << "Enter Master Password: ";
+    cin >> master.masterPass;
+}
     //arya
     ifstream vault(username+".txt");
     vault.close();
@@ -40,15 +45,35 @@ void findPassword(string &vaultName){
 }
 
 void newPassword(){}
-
+void mainMenu(){
+    int choice;
+    sudo master;
+    string vaultName;
+    cout << "1. New Vault" << endl;
+    cout << "2. Login" << endl;
+    cout << "3. Quit" << endl;
+    cout << "Masukkan Pilihan: ";
+    cin >> choice;
+    switch (choice)
+    {
+    case 1:
+        newVault(VaultName, master);
+        break;
+    case 2:
+        loginMenu(loginVault());
+        break;
+    case 3:
+        cout << "Goodbye!";
+        break;
+    default:
+        mainMenu();
+        cout << "Invalid choice";
+        break;
+    }
+}
 int main()
 {
-    sudo master;
-    cout << "Welcome to PassManager!" << endl;
-    cout << "Enter Master Username: ";
-    cin >> master.masterUser;
-    cout << "Enter Master Password: ";
-    cin >> master.masterPass;
+    mainMenu();
     
     
     string vaultName;
