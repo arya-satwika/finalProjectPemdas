@@ -198,7 +198,7 @@ void hapusVault(const string &vaultName){
     string tempUser = vaultName;
     string account = tempUser.erase(tempUser.size() - 4, tempUser.size());
     ifstream users("users.txt");
-    ifstream temp("temp.txt");
+    
     ofstream tempWrite("temp.txt");
     while (getline(users, line))
     {
@@ -214,13 +214,12 @@ void hapusVault(const string &vaultName){
         }
     }
     tempWrite.close();
-    temp.close();
+ 
     users.close();
     if (validUser)
     {
         cout << "Masukkan master Password untuk Konfirmasi: ";
         cin >> inputPass;
-        cout << accPass;
         if (inputPass == accPass)
         {
             remove(vaultName.c_str());
