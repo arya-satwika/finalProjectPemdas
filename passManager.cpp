@@ -14,37 +14,12 @@ void addPassword(string &vaultName);
 void loginMenu(string vaultName);
 void mainMenu();
 void findLogin(string &vaultName);
+void newVault(string &vaultName, sudo &master);
+void updatePassword(string &vaultName);
+int loginInstance(string &vaultname, string findWebsite);
+int outputLogin(string* storedUser, string* storedPass, int size);
 
 
-void deleteVault(const string &vaultFile, const string &masterUsername, const string &masterPassword) {
-    cout << "Untuk menghapus vault, Anda harus memasukkan Master Username dan Password.\n";
-
-    // Meminta Master Username dan Password
-    string inputUsername, inputPassword;
-    cout << "Masukkan Master Username: ";
-    cin >> inputUsername;
-    cout << "Masukkan Master Password: ";
-    cin >> inputPassword;
-
-    // Verifikasi Master Username dan Password
-    if (inputUsername == masterUsername && inputPassword == masterPassword) {
-        cout << "Apakah Anda yakin ingin menghapus file vault? (y/n): ";
-        char confirm;
-        cin >> confirm;
-
-        if (tolower(confirm) == 'y') {
-            if (remove(vaultFile.c_str()) == 0) {
-                cout << "File vault berhasil dihapus.\n";
-            } else {
-                cerr << "Error: Gagal menghapus file vault. File mungkin tidak ada.\n";
-            }
-        } else {
-            cout << "Penghapusan file vault dibatalkan.\n";
-        }
-    } else {
-        cout << "Verifikasi gagal! Master Username atau Password salah.\n";
-    }
-}
 void addPassword(string &vaultName) {
     int choice;
     ofstream vault(vaultName, ios::app);
