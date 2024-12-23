@@ -11,14 +11,31 @@ struct sudo
 };
 string loginVault();
 void addPassword(string &vaultName);
-void loginMenu(string vaultName);
+void loginMenu(const string vaultName);
 void mainMenu();
-void findLogin(string &vaultName);
+void findLogin(const string &vaultName);
 void newVault(string &vaultName, sudo &master);
-void updatePassword(string &vaultName);
-int loginInstance(string &vaultname, string findWebsite);
-int outputLogin(string* storedUser, string* storedPass, int size);
+int loginInstance(const string &vaultname, string findWebsite);
+int outputLogin(const string* storedUser, string* storedPass, int size);
+void hapusPassword(const string &vaultName);
+void hapusVault(const string &vaultName);
 
+bool existingUser(sudo &master){
+    ifstream file("users.txt");
+    string line;
+    while (getline(file,line))
+    {
+        if (line.find("Username: "+master.masterUser) != string::npos)
+        {
+            file.close();
+            return true;
+        }
+        
+    }
+    file.close();
+    return false;
+    
+}
 
 void addPassword(string &vaultName) {
     int choice;
@@ -38,7 +55,9 @@ void addPassword(string &vaultName) {
     cout << "Password added successfully!" << endl;
     vault.close();
     cout << "1. Nambah Password?" << endl;
-    cout << "2. Log Out" << endl;
+    cout << "2. Kembali ke menu Login" << endl;
+    cout << "3. Log Out" << endl;
+    cout << "Masukkan Pilihan: ";
     cin >> choice;
     switch (choice)
     {
@@ -46,65 +65,44 @@ void addPassword(string &vaultName) {
         addPassword(vaultName);
         break;
     case 2:
+        loginMenu(vaultName);
+        break;
+    case 3:
         mainMenu();
         break;
     }
 }
 
 void newVault(string &vaultName, sudo &master){
+    bool repeat;
+    do
+    {
+        string username, password;
+        cout << "Enter Master Username: ";
+        cin >> master.masterUser;
 
-    string username, password;
-    cout << "Enter Master Username: ";
-    cin >> master.masterUser;
+        cout << "Enter Master Password: ";
+        cin >> master.masterPass;
+        if (existingUser(master))
+        {
+            cout << "User sudah terdaftar" << endl;
+            repeat = true;
+        }
+        else{
+        ofstream file("users.txt", ios::app);
+        file << "Username: " << master.masterUser << endl
+             << "Password: " << master.masterPass << endl;
+        file.close();
+        }
 
-    cout << "Enter Master Password: ";
-    cin >> master.masterPass;
-    ofstream file("users.txt", ios::app);
-    file << "Username: " << master.masterUser << endl
-        << "Password: " << master.masterPass << endl;
-    file.close();
+    } while (repeat == true);
+    
     ofstream vault(master.masterUser+".txt");
     vault.close();
     loginMenu(master.masterUser+".txt");
 }
-void updatePassword(string &vaultName) {
-    ifstream vault(vaultName);
-    ofstream temp("temp.txt");
 
-    string findWebsite, line, username, password, newPassword;
-    cout << "Enter website to update password: ";
-    cin >> findWebsite;
-
-    bool found = false;
-    while (getline(vault, line)) {
-        if (line == "Website: " + findWebsite) {
-            found = true;
-            temp << line << endl;
-            getline(vault, username);
-            getline(vault, password);
-            cout << "Enter new password: ";
-            cin >> newPassword;
-            temp << username << endl;
-            temp << "Password: " << newPassword << endl;
-        } else {
-            temp << line << endl;
-        }
-    }
-
-    vault.close();
-    temp.close();
-
-    if (found) {
-        remove(vaultName.c_str());
-        rename("temp.txt", vaultName.c_str());
-        cout << "Password updated successfully!" << endl;
-    } else {
-        remove("temp.txt");
-        cout << "No entries found for " << findWebsite << endl;
-    }
-}
-
-int loginInstance(string &vaultname , string findWebsite){ 
+int loginInstance(const string &vaultname , string findWebsite){ 
     string temp;
     int count=0;
     ifstream vault(vaultname);
@@ -118,7 +116,7 @@ int loginInstance(string &vaultname , string findWebsite){
     }
     return count;
 }
-int outputLogin(string* storedUser, string* storedPass, int size){
+int outputLogin(const string* storedUser, string* storedPass, int size){
     int choice;
     cout <<"pilih akun yang mana?" << endl;
     for (int j = 0; j < size; j++)
@@ -192,44 +190,124 @@ void findLogin(string &vaultName){
         break;
     }
 }
-void loginMenu(string vaultName){
-    int pilihan;
-    while (true) {
-        cout << "\nMenu:\n";
-        cout << "1. Tambah Password\n";
-        cout << "2. Cari Password\n";
-        cout << "3. Hapus Password\n";
-        cout << "4. Update Password\n";
-        cout << "5. Hapus Vault\n";
-        cout << "6. Keluar\n";
-        cout << "Pilih opsi: ";
-        cin >> pilihan;
 
-        if (pilihan == 1) {
-            addPassword(vaultName);
-        } else if (pilihan == 2) {
-            findLogin(vaultName);
-        } else if (pilihan == 3) {
-            //hapusPassword(vaultName);
-        } else if (pilihan == 4) {
-            updatePassword(vaultName);
-            break;
-        } else if (pilihan == 5) {
-            //hapusVault(vaultName);
-            break;
-        }
-        else if (pilihan == 6)
+void hapusVault(const string &vaultName){
+    string line;
+    string accPass, inputPass;
+    bool validUser = false;
+    string tempUser = vaultName;
+    string account = tempUser.erase(tempUser.size() - 4, tempUser.size());
+    ifstream users("users.txt");
+    ifstream temp("temp.txt");
+    ofstream tempWrite("temp.txt");
+    while (getline(users, line))
+    {
+        if (line.find("Username: "+account) != string::npos)
         {
-            mainMenu();
+            getline(users, accPass);
+            accPass.erase(0, 10);
+            validUser = true;
         }
-        
-        else {
-            cout << "Pilihan tidak valid" << endl;
+        else if (line.find("Username: "+account) == string::npos)
+        {
+            tempWrite << line << endl;
         }
+    }
+    tempWrite.close();
+    temp.close();
+    users.close();
+    if (validUser)
+    {
+        cout << "Masukkan master Password untuk Konfirmasi: ";
+        cin >> inputPass;
+        cout << accPass;
+        if (inputPass == accPass)
+        {
+            remove(vaultName.c_str());
+            remove("users.txt");
+            rename("temp.txt", "users.txt");
+            cout << "Vault berhasil dihapus!" << endl;
+        }
+        else 
+        {
+            cout << "Password Salah!" << endl;
+        }
+    }
+    else
+    {
+            remove("temp.txt");
+            cout << "User tidak ditemukan" << endl;
     }
 }
 
-void newPassword(){}
+void hapusPassword(const string &vaultName) {
+    string website, line, username;
+    cout << "Masukkan nama website yang ingin dihapus: ";
+    cin >> website;
+    cout << "Masukkan Username: ";
+    cin >> username;
+    ifstream vault(vaultName);
+    ofstream temp("temp.txt");
+    bool ditemukan = false;
+
+    while (getline(vault, line)) {
+        if (line == "Website: "+website) {
+            getline(vault, line); // Username
+            if (line == "Username: "+username)
+            {
+                getline(vault, line); // Password
+                ditemukan = true;
+            }
+        } else {
+            temp << line << endl;
+        }
+    }
+    vault.close();
+    temp.close();
+    if (ditemukan) {
+        remove(vaultName.c_str());  
+        rename("temp.txt", vaultName.c_str());  
+        cout << "Password berhasil dihapus!" << endl;
+    } else {
+        remove("temp.txt");  
+        cout << "User tidak ditemukan!" << endl;
+    }
+}
+
+void loginMenu(string vaultName) {
+    int pilihan;
+        cout << "\nMenu:\n";
+        cout << "1. Tambah Password\n";
+        cout << "2. Cari Password\n";
+        cout << "3. Hapus Vault\n";
+        cout << "4. Hapus Password\n";
+        cout << "5. Keluar\n";
+        cout << "Pilih opsi: ";
+        cin >> pilihan;
+
+        switch (pilihan) {
+            case 1:
+                addPassword(vaultName);
+                break;
+            case 2:
+                findLogin(vaultName);
+                break;
+            case 3:
+                hapusVault(vaultName);
+                break;
+            case 4:
+                hapusPassword(vaultName);
+                break;
+            case 5:
+                mainMenu();
+                return;
+            default:
+                cout << "Pilihan tidak valid" << endl;
+                break;
+        }
+}
+
+
 void mainMenu(){
     int choice;
     sudo master;
@@ -302,8 +380,5 @@ string loginVault()
 int main()
 {
     mainMenu();
-    
-    
-    string vaultName;
     return 0;
 }

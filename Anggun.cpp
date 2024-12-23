@@ -44,19 +44,24 @@ void cariPassword(const string &vaultName) {
 }
 
 void hapusPassword(const string &vaultName) {
-    string website, line;
+    string website, line, username;
     cout << "Masukkan nama website yang ingin dihapus: ";
     cin >> website;
+    cout << "Masukkan Username: ";
+    cin >> username;
 
     ifstream vault(vaultName);
     ofstream temp("temp.txt");
     bool ditemukan = false;
 
     while (getline(vault, line)) {
-        if (line == website) {
+        if (line == "Website: "+website) {
             getline(vault, line); // Username
-            getline(vault, line); // Password
-            ditemukan = true;
+            if (line == "Username: "+username)
+            {
+                getline(vault, line); // Password
+                ditemukan = true;
+            }
         } else {
             temp << line << endl;
         }

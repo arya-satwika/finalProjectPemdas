@@ -1,8 +1,6 @@
 Username: aku
 Password: jago
-Username: babu
-Password: titik
-Username: fafa
-Password: fufu
 Username: fifi
 Password: hihi
+Username: contoh
+Password: soal
