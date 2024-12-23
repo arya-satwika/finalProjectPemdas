@@ -16,7 +16,35 @@ void mainMenu();
 void findLogin(string &vaultName);
 
 
+void deleteVault(const string &vaultFile, const string &masterUsername, const string &masterPassword) {
+    cout << "Untuk menghapus vault, Anda harus memasukkan Master Username dan Password.\n";
 
+    // Meminta Master Username dan Password
+    string inputUsername, inputPassword;
+    cout << "Masukkan Master Username: ";
+    cin >> inputUsername;
+    cout << "Masukkan Master Password: ";
+    cin >> inputPassword;
+
+    // Verifikasi Master Username dan Password
+    if (inputUsername == masterUsername && inputPassword == masterPassword) {
+        cout << "Apakah Anda yakin ingin menghapus file vault? (y/n): ";
+        char confirm;
+        cin >> confirm;
+
+        if (tolower(confirm) == 'y') {
+            if (remove(vaultFile.c_str()) == 0) {
+                cout << "File vault berhasil dihapus.\n";
+            } else {
+                cerr << "Error: Gagal menghapus file vault. File mungkin tidak ada.\n";
+            }
+        } else {
+            cout << "Penghapusan file vault dibatalkan.\n";
+        }
+    } else {
+        cout << "Verifikasi gagal! Master Username atau Password salah.\n";
+    }
+}
 void addPassword(string &vaultName) {
     int choice;
     ofstream vault(vaultName, ios::app);
@@ -60,8 +88,9 @@ void newVault(string &vaultName, sudo &master){
     file << "Username: " << master.masterUser << endl
         << "Password: " << master.masterPass << endl;
     file.close();
-    ifstream vault(master.masterUser+".txt");
+    ofstream vault(master.masterUser+".txt");
     vault.close();
+    loginMenu(master.masterUser+".txt");
 }
 void updatePassword(string &vaultName) {
     ifstream vault(vaultName);
@@ -163,9 +192,13 @@ void findLogin(string &vaultName){
     }
     vault.close();
     int choice = outputLogin(storedUser, storedPass, size);
+    cout << "Username: " << storedUser[choice-1] << endl;
+    cout << "Password: " << storedPass[choice-1] << endl;
+    cout << "\n\n\n";
     cout<< "1. Cari Password lagi?" << endl;
     cout << "2. Kembali ke menu Login" << endl;
     cout << "3. Log Out" << endl;
+    cout << "Masukkan Pilihan: ";
     int choice2;
     cin >> choice2;
     switch (choice2)
@@ -179,6 +212,9 @@ void findLogin(string &vaultName){
     case 3:
         mainMenu();
         break;
+    default:
+        cout << "Invalid choice" << endl;
+        break;
     }
 }
 void loginMenu(string vaultName){
@@ -189,7 +225,8 @@ void loginMenu(string vaultName){
         cout << "2. Cari Password\n";
         cout << "3. Hapus Password\n";
         cout << "4. Update Password\n";
-        cout << "5. Keluar\n";
+        cout << "5. Hapus Vault\n";
+        cout << "6. Keluar\n";
         cout << "Pilih opsi: ";
         cin >> pilihan;
 
@@ -203,9 +240,14 @@ void loginMenu(string vaultName){
             updatePassword(vaultName);
             break;
         } else if (pilihan == 5) {
-            mainMenu();
+            //hapusVault(vaultName);
             break;
         }
+        else if (pilihan == 6)
+        {
+            mainMenu();
+        }
+        
         else {
             cout << "Pilihan tidak valid" << endl;
         }
@@ -243,7 +285,7 @@ string loginVault()
 {
     string username, password, masterUser, masterPass;
     bool repeat;
-    bool valUser, valPass;
+    bool valUser;
     do
     {
         cout << "masukkan username: ";
@@ -258,23 +300,26 @@ string loginVault()
                 getline(users, masterPass);
                 if (masterPass.find(password) != string::npos)
                 {
-                    valPass = true;
+                    repeat = false;
                     return username + ".txt";
                 }
                 else
                 {
-                    valPass = false;
                     cout << "\n\nPASSWORD SALAH\n" ;
                     repeat = true;
                     break;
                 }
             }
-            else 
-            {
-                cout << "Username tidak ditemukan" << endl;
-                repeat = true;
+            else{
+                valUser = false;
             }
         }
+        if (valUser == false)
+        {
+            cout << "Username tidak ditemukan" << endl;
+            repeat = true;
+        }
+        
     } while (repeat == true);
     return " "; 
 }
