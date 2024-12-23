@@ -201,7 +201,6 @@ void hapusVault(const string &vaultName){
     string tempUser = vaultName;
     string account = tempUser.erase(tempUser.size() - 4, tempUser.size());
     ifstream users("users.txt");
-    
     ofstream tempWrite("temp.txt");
     while (getline(users, line))
     {
@@ -248,31 +247,42 @@ void hapusPassword(const string &vaultName) {
     cin >> website;
     cout << "Masukkan Username: ";
     cin >> username;
+    string temp1, temp2;
+
     ifstream vault(vaultName);
     ofstream temp("temp.txt");
     bool ditemukan = false;
 
     while (getline(vault, line)) {
         if (line == "Website: "+website) {
+            temp1 = line;
             getline(vault, line); // Username
+            temp2 = line;
             if (line == "Username: "+username)
             {
                 getline(vault, line); // Password
                 ditemukan = true;
             }
+            else
+            {
+                temp << temp1 << endl;
+                temp << temp2 << endl;
+            }
         } else {
             temp << line << endl;
         }
     }
+
     vault.close();
     temp.close();
+
     if (ditemukan) {
         remove(vaultName.c_str());  
         rename("temp.txt", vaultName.c_str());  
         cout << "Password berhasil dihapus!" << endl;
     } else {
         remove("temp.txt");  
-        cout << "User tidak ditemukan!" << endl;
+        cout << "Website tidak ditemukan!" << endl;
     }
 }
 
@@ -321,12 +331,13 @@ string loginVault()
 
 void loginMenu(string vaultName) {
     int pilihan;
-        cout << "\nMenu:\n";
+        cout << "******************************************\n";
         cout << "1. Tambah Password\n";
         cout << "2. Cari Password\n";
         cout << "3. Hapus Vault\n";
         cout << "4. Hapus Password\n";
-        cout << "5. Keluar\n";
+        cout << "5. Log Out\n";
+        cout << "******************************************\n";
         cout << "Pilih opsi: ";
         cin >> pilihan;
 
