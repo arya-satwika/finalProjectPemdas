@@ -167,9 +167,10 @@ void findLogin(string &vaultName){
     }
     vault.close();
     int choice = outputLogin(storedUser, storedPass, size);
-    cout << "Username: " << storedUser[choice-1] << endl;
-    cout << "Password: " << storedPass[choice-1] << endl;
-    cout << "\n\n\n";
+    cout << "\n\n";
+    cout << "USERNAME: " << storedUser[choice-1] << endl;
+    cout << "PASSWORD: " << storedPass[choice-1] << endl;
+    cout << "\n\n";
     cout<< "1. Cari Password lagi?" << endl;
     cout << "2. Kembali ke menu Login" << endl;
     cout << "3. Log Out" << endl;
