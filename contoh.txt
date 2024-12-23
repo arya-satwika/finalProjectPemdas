@@ -7,3 +7,6 @@ Website: instagram.com
 Username: tulang
 Password: bokong
 
+Website: twitter.com
+Username: juling
+Password: mata
